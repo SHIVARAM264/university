@@ -4,9 +4,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>University Website Design - Easy Tutorials</title>
         <link rel="stylesheet" href="style.css">
+        <script src="script.js" defer></script>
     </head>
     <body>
-        <!-- Top announcement bar -->
         <div class="top-bar">
             <p class="announcement">📅 ACADEMIC CALENDAR FOR 2025-26 — <a href="#">CLICK HERE</a> TO APPLY FOR OCT 2025 EXECUTIVE MBA BATCH. FOR PROGRAM DETAILS AND ADMISSION</p>
             <div class="top-bar-right">
@@ -15,7 +15,6 @@
             </div>
         </div>
 
-        <!-- Header with logo and institution name -->
         <div class="header-top">
             <div class="header-content">
                 <div class="logo-section">
@@ -45,7 +44,10 @@
             </div>
         </div>
 
-        <!-- Main navigation bar -->
+        <button id="theme-toggle" class="theme-toggle-fixed">
+            <img src="ADDIMAGE/night-mode.png" alt="Toggle Theme" class="theme-icon">
+        </button>
+
         <nav class="main-nav">
             <ul>
                 <li><a href="index.html">HOME</a></li>
@@ -64,70 +66,20 @@
             </ul>
         </nav>
         <section class="header">
-            <!-- Hero slider: fades between banner images. If you have a second banner, place it as ADDIMAGE/baner2.png -->
             <div class="slider" aria-hidden="false">
                 <img src="ADDIMAGE/baner.png" alt="B.Tech Admissions 2026-27" class="slide">
                 <img src="ADDIMAGE/baner2.png" alt="B.Tech Admissions 2026-27 - alternate" class="slide">
             </div>
         </section>
 
-        <!-- Awards and Accreditations Section -->
-        <section class="awards-section">
-            <div class="awards-container">
-                <h2>Recognition & Accreditations</h2>
-                <div class="awards-row">
-                    <div class="award-item">
-                        <img src="ADDIMAGE/ksure-award.png" alt="KSURE Rating - Teaching Excellence">
-                        <p>KSURE Rating</p>
-                    </div>
-                    <div class="award-item">
-                        <img src="ADDIMAGE/educational-excellence.png" alt="Educational Excellence 2021">
-                        <p>Educational Excellence 2021</p>
-                    </div>
-                    <div class="award-item">
-                        <img src="ADDIMAGE/dsu-rank.png" alt="DSU Rank - Emerging Engineering Institute">
-                        <p>DSU Rank No. 1 (2022)</p>
-                    </div>
-                    <div class="award-item">
-                        <img src="ADDIMAGE/business-awards.png" alt="Times Best Emerging University 2021">
-                        <p>Times Best Emerging University</p>
-                    </div>
-                    <div class="award-item">
-                        <img src="ADDIMAGE/bschool-ranking.png" alt="B School Ranking Survey 2021">
-                        <p>B School Ranking 2021</p>
-                    </div>
-                    <div class="award-item">
-                        <img src="ADDIMAGE/iirf-ranking.png" alt="IIRF National Ranking 2023">
-                        <p>IIRF National Ranking</p>
-                    </div>
-                    <div class="award-item">
-                        <img src="ADDIMAGE/careers360.png" alt="Careers 360 AAA Ranking">
-                        <p>Careers 360 AAA Ranking</p>
-                    </div>
-                </div>
-                <div class="awards-badges">
-                    <div class="badge-item">
-                        <img src="ADDIMAGE/grade-a-plus.png" alt="A+ Grade Accreditation">
-                        <p>A+ Grade</p>
-                    </div>
-                    <div class="badge-item">
-                        <img src="ADDIMAGE/naac-accreditation.png" alt="NAAC Accreditation">
-                        <p>NAAC Accreditation</p>
-                    </div>
-                    <div class="badge-item">
-                        <img src="ADDIMAGE/naac-certified.png" alt="NAAC Certified">
-                        <p>NAAC Certified</p>
-                    </div>
-                </div>
-            </div>
+        <section class="side-section">
+            <img src="ADDIMAGE/side.png" alt="University Side Image">
         </section>
 
-        <!-- Programs & Schools Grid -->
         <section class="programs-section">
             <div class="programs-container">
                 <h2>Our Schools & Departments</h2>
                 <div class="programs-grid">
-                    <!-- Row 1 -->
                     <div class="program-box">
                         <h3>ENGINEERING</h3>
                     </div>
@@ -143,7 +95,6 @@
                     <div class="program-box">
                         <h3>COMMERCE & MANAGEMENT</h3>
                     </div>
-                    <!-- Row 2 -->
                     <div class="program-box">
                         <h3>EXECUTIVE EDUCATION</h3>
                     </div>
@@ -163,7 +114,7 @@
             </div>
         </section>
         
-        <!-- Footer -->
+        <footer class="footer">
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-column">
@@ -238,7 +189,6 @@
                 </div>
             </div>
 
-            <!-- Social Media Bar -->
             <div class="social-sidebar">
                 <a href="#" class="social-icon youtube" title="YouTube">📺</a>
                 <a href="#" class="social-icon linkedin" title="LinkedIn">💼</a>
@@ -246,43 +196,12 @@
                 <a href="#" class="social-icon instagram" title="Instagram">📷</a>
             </div>
 
-            <!-- Footer Bottom -->
             <div class="footer-bottom">
                 <p>&copy; 2025 DSU. All Rights Reserved</p>
                 <a href="#">Privacy Policy</a>
             </div>
         </footer>
         
-        <script>
-        // Simple fading slider — rotates slides every 5 seconds. If only one slide exists, nothing animates.
-        document.addEventListener('DOMContentLoaded', function () {
-            const slides = Array.from(document.querySelectorAll('.slider .slide'));
-            if (!slides.length) return;
-            // Set initial styles
-            slides.forEach((s, i) => {
-                s.style.position = 'absolute';
-                s.style.top = '0';
-                s.style.left = '0';
-                s.style.width = '100%';
-                s.style.height = '100%';
-                s.style.objectFit = 'cover';
-                s.style.transition = 'opacity 0.6s ease-in-out';
-                s.style.opacity = i === 0 ? '1' : '0';
-                s.style.zIndex = i === 0 ? '2' : '1';
-            });
 
-            if (slides.length <= 1) return; // nothing to rotate
-
-            let current = 0;
-            setInterval(() => {
-                const next = (current + 1) % slides.length;
-                slides[current].style.opacity = '0';
-                slides[current].style.zIndex = '1';
-                slides[next].style.opacity = '1';
-                slides[next].style.zIndex = '2';
-                current = next;
-            }, 2000);
-        });
-        </script>
         </body>
 </html>
