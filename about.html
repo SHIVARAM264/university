@@ -242,5 +242,34 @@
         <a href="#">Privacy Policy</a>
       </div>
     </footer>
+
+    <!-- DSU Assistant -->
+    <div id="dsu-assistant" class="dsu-assistant">
+      <div class="assistant-toggle" id="assistant-toggle">
+        <span class="assistant-icon">🎓</span>
+        <span class="assistant-text">DSU Assistant</span>
+      </div>
+      <div class="assistant-chat" id="assistant-chat">
+        <div class="chat-header">
+          <h4>DSU Assistant</h4>
+          <button class="close-btn" id="close-assistant">×</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="message bot-message">
+            <p>Hello! I'm your DSU Assistant. How can I help you today?</p>
+            <div class="quick-options">
+              <button class="quick-btn" data-query="admissions">Admissions</button>
+              <button class="quick-btn" data-query="courses">Courses</button>
+              <button class="quick-btn" data-query="contact">Contact</button>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" id="user-input" placeholder="Type your question...">
+          <button id="send-btn">Send</button>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>
