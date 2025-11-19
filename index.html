@@ -32,7 +32,6 @@
                     <a href="#">Newsletter</a>
                     <a href="#">Alumni</a>
                     <a href="#">Blog</a>
-                    <a href="#">ERP</a>
                     <a href="#">Login</a>
                     <a href="#">e-Brochure</a>
                     <span class="badge nri">NRI/FOREIGN ADMISSIONS - APPLY HERE</span>
@@ -193,7 +192,40 @@
             </div>
         </section>
         
-        <footer class="footer">
+        <!-- DSU Assistant Chatbot -->
+        <div id="dsu-assistant" class="dsu-assistant">
+            <div class="chat-toggle" id="chat-toggle">
+                <img src="ADDIMAGE/logo.png" alt="DSU Assistant" class="assistant-icon">
+                <span class="chat-text">DSU Assistant</span>
+            </div>
+            <div class="chat-window" id="chat-window">
+                <div class="chat-header">
+                    <img src="ADDIMAGE/logo.png" alt="DSU" class="chat-logo">
+                    <div class="chat-title">
+                        <h4>DSU Assistant</h4>
+                        <span>Ask me about DSU!</span>
+                    </div>
+                    <button class="chat-close" id="chat-close">×</button>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            Hello! I'm your DSU Assistant. How can I help you today?
+                            <div class="quick-options">
+                                <button class="quick-btn" data-query="admissions">Admissions</button>
+                                <button class="quick-btn" data-query="courses">Courses</button>
+                                <button class="quick-btn" data-query="contact">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Type your message..." maxlength="200">
+                    <button id="chat-send">Send</button>
+                </div>
+            </div>
+        </div>
+        
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-column">
@@ -282,7 +314,6 @@
                 <a href="#">Privacy Policy</a>
             </div>
         </footer>
-        
 
     </body>
 </html>
