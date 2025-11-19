@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fa = document.createElement('link');
     fa.rel = 'stylesheet';
     fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css';
-    document.head.appendChild(fa);
+  document.head.appendChild(fa);
   }
 
   footer.innerHTML = `
@@ -169,7 +169,112 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <div class="footer-bottom">
       <p>&copy; 2025 DSU. All Rights Reserved</p>
-      <a href="#">Privacy Policy</a>
-    </div>
+  <a href="#">Privacy Policy</a>
+  </div>
   `;
+});
+
+// Wire NAAC link globally and mark active on NAAC page
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.toLowerCase();
+  const naacLink = Array.from(document.querySelectorAll('.main-nav > ul > li > a'))
+    .find((a) => a.textContent.trim().toLowerCase() === 'naac');
+  if (naacLink) {
+    naacLink.setAttribute('href', 'naac.html');
+    if (path.endsWith('naac.html')) {
+      naacLink.classList.add('active');
+    }
+  }
+});
+
+// Wire ACADEMICS links and set active on School/Undergrad/Postgrad pages
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.toLowerCase();
+  const academicsDropdown = Array.from(document.querySelectorAll('.main-nav > ul > li.dropdown'))
+    .find((li) => li.querySelector('a') && li.querySelector('a').textContent.trim().toLowerCase() === 'academics');
+  if (!academicsDropdown) return;
+  const list = academicsDropdown.querySelector('.dropdown-content');
+  if (!list) return;
+
+  const desired = [
+    { label: 'SCHOOL', href: 'school.html' },
+    { label: 'UNDERGRADUATE PROGRAMMES', href: 'underprogram.html' },
+    { label: 'POSTGRADUATE PROGRAMMES', href: 'postprogram.html' },
+    { label: 'EXECUTIVE EDUCATION', href: '#' },
+    { label: 'ONLINE EDUCATION', href: '#' }
+  ];
+
+  const existingLinks = Array.from(list.querySelectorAll('a'));
+  const getOrCreate = (label) => {
+    const found = existingLinks.find((a) => a.textContent.trim().toLowerCase() === label.toLowerCase());
+    if (found) return found;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.textContent = label;
+    li.appendChild(a);
+    list.appendChild(li);
+    return a;
+  };
+
+  desired.forEach((item, index) => {
+    const a = getOrCreate(item.label);
+    a.setAttribute('href', item.href);
+    const li = a.parentElement;
+    if (li) list.insertBefore(li, list.children[index] || null);
+  });
+
+  const activeMap = ['school.html', 'underprogram.html', 'postprogram.html'];
+  const current = activeMap.find((href) => path.endsWith(href));
+  if (current) {
+    const target = Array.from(list.querySelectorAll('a')).find((a) => a.getAttribute('href') === current);
+    if (target) target.classList.add('active');
+    academicsDropdown.classList.add('active');
+  }
+});
+
+// Wire ADMISSIONS dropdown links globally and set active states
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.toLowerCase();
+  const admissionsDropdown = Array.from(document.querySelectorAll('.main-nav > ul > li.dropdown'))
+    .find((li) => li.querySelector('a') && li.querySelector('a').textContent.trim().toLowerCase() === 'admissions');
+  if (!admissionsDropdown) return;
+  const list = admissionsDropdown.querySelector('.dropdown-content');
+  if (!list) return;
+
+  const desired = [
+    { label: 'ADMISSION DETAILS', href: 'admission.html' },
+    { label: 'DIRECT ADMISSIONS-2026', href: 'directadm.html' },
+    { label: 'COURSE,ELIGIBILITY & FEE', href: 'cour_elg_fee.html' },
+    { label: 'HOSTEL FEE', href: 'hostelfee.html' },
+    { label: 'INTERNATIONAL ADMISSIONS', href: '#' },
+    { label: 'ONLINE DEGREE', href: '#' },
+    { label: 'HELPLINE', href: '#' }
+  ];
+
+  const existingLinks = Array.from(list.querySelectorAll('a'));
+  const getOrCreate = (label) => {
+    const found = existingLinks.find((a) => a.textContent.trim().toLowerCase() === label.toLowerCase());
+    if (found) return found;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.textContent = label;
+    li.appendChild(a);
+    list.appendChild(li);
+    return a;
+  };
+
+  desired.forEach((item, index) => {
+    const a = getOrCreate(item.label);
+    a.setAttribute('href', item.href);
+    const li = a.parentElement;
+    if (li) list.insertBefore(li, list.children[index] || null);
+  });
+
+  const activeMap = desired.map((d) => d.href).filter((href) => href !== '#');
+  const current = activeMap.find((href) => path.endsWith(href));
+  if (current) {
+    const target = Array.from(list.querySelectorAll('a')).find((a) => a.getAttribute('href') === current);
+    if (target) target.classList.add('active');
+    admissionsDropdown.classList.add('active');
+  }
 });
