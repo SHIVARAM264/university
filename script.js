@@ -11,6 +11,7 @@ themeToggle.addEventListener('click', () => {
     body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
 });
+
 document.addEventListener('DOMContentLoaded', function () {
     const slides = Array.from(document.querySelectorAll('.slider .slide'));
     if (!slides.length) return;
@@ -40,8 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 2000);
 });
 
-// Auto-open NIRF submenu on NIRF Engineering page
-// Auto-open UNIVERSITY dropdown on AICTE, ANNUAL, and UGC pages
 document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname.toLowerCase();
   const pageToLabel = {
@@ -52,32 +51,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const match = Object.keys(pageToLabel).find((p) => path.endsWith(p));
   if (match) {
-    // Find the UNIVERSITY dropdown in main nav
     const uniDropdown = Array.from(document.querySelectorAll('.main-nav > ul > li.dropdown'))
       .find((li) => li.querySelector('a') && li.querySelector('a').textContent.trim().toLowerCase() === 'university');
     if (uniDropdown) {
-      // Highlight the specific item within the dropdown
       const label = pageToLabel[match];
       const targetLink = Array.from(uniDropdown.querySelectorAll('.dropdown-content a'))
         .find((a) => a.textContent.trim().toLowerCase() === label);
       if (targetLink) {
         targetLink.classList.add('active');
       }
-
-      // Only set a visual active state for the parent; do NOT auto-open
       uniDropdown.classList.add('active');
     }
   }
 });
 
-// Inject common footer content on all pages that lack it
 document.addEventListener('DOMContentLoaded', () => {
   const footer = document.querySelector('footer.footer');
   if (!footer) return;
   const hasRichFooter = footer.querySelector('.footer-content');
   if (hasRichFooter) return;
 
-  // Ensure Font Awesome for icons
   if (!document.querySelector('link[href*="font-awesome"]')) {
     const fa = document.createElement('link');
     fa.rel = 'stylesheet';
@@ -172,4 +165,114 @@ document.addEventListener('DOMContentLoaded', () => {
       <a href="#">Privacy Policy</a>
     </div>
   `;
+});
+
+// DSU Assistant Chatbot
+const chatToggle = document.getElementById('chat-toggle');
+const chatWindow = document.getElementById('chat-window');
+const chatClose = document.getElementById('chat-close');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
+const chatMessages = document.getElementById('chat-messages');
+
+const dsuResponses = {
+  admission: 'DSU admissions open for 2024-25. Apply online through KCET/COMEDK/Management quota.',
+  courses: 'Engineering: CSE, ECE, Mech, Civil, EEE. Other: BBA, BCA, B.Com, MBA, MCA, M.Tech.',
+  cse: 'Computer Science Engineering: 4 years, Fee: ₹2.5L/year, NAAC A+ accredited.',
+  ece: 'Electronics & Communication: 4 years, Fee: ₹2.3L/year, Industry partnerships.',
+  mechanical: 'Mechanical Engineering: 4 years, Fee: ₹2.2L/year, Modern labs.',
+  civil: 'Civil Engineering: 4 years, Fee: ₹2.2L/year, Infrastructure focus.',
+  mba: 'MBA program: 2 years, Fee: ₹4L/year, Specializations available.',
+  bca: 'BCA: 3 years, Fee: ₹1.5L/year, Programming and software development.',
+  fees: 'Engineering: ₹2.2-2.5L/year, MBA: ₹4L/year, BCA: ₹1.5L/year',
+  scholarship: 'Merit scholarships, SC/ST fee concession, Sports quota available.',
+  hostel: 'Separate hostels for boys and girls. AC/Non-AC rooms. Fee: ₹80K-1.2L/year.',
+  placement: '90%+ placement rate. Top recruiters: Infosys, TCS, Wipro, Accenture, Amazon.',
+  contact: 'Phone: +91-80-28447844, Email: info@dsu.edu.in',
+  address: 'Dayananda Sagar University, Harohalli, Main Campus, Bangalore - 560078',
+  location: 'Located in Bangalore, Karnataka. Well connected by metro and bus.',
+  campus: '60-acre green campus with modern infrastructure, labs, and sports facilities.',
+  library: 'Central library with 1L+ books, e-resources, and digital learning center.',
+  labs: 'State-of-the-art labs for all departments with latest equipment.',
+  sports: 'Cricket, Football, Basketball, Volleyball, Badminton, Gym facilities.',
+  events: 'Melange (Annual fest), Techno-cultural events, Industry seminars.',
+  accreditation: 'NAAC A+ grade, AICTE approved, UGC recognized university.',
+  faculty: '200+ experienced faculty, many with PhD and industry experience.',
+  research: 'Active research in AI, IoT, Robotics, and emerging technologies.',
+  default: "I can help with DSU admissions, courses, contact details, fees, and placements. What would you like to know?"
+};
+
+if (chatToggle) {
+  chatToggle.addEventListener('click', () => {
+    chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+  });
+}
+
+if (chatClose) {
+  chatClose.addEventListener('click', () => {
+    chatWindow.style.display = 'none';
+  });
+}
+
+function sendMessage(message) {
+  if (!message.trim()) return;
+  addMessage(message, 'user');
+  setTimeout(() => {
+    const response = getBotResponse(message);
+    addMessage(response, 'bot');
+  }, 500);
+  chatInput.value = '';
+}
+
+function addMessage(message, sender) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `message ${sender}-message`;
+  messageDiv.innerHTML = `<div class="message-content">${message}</div>`;
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function getBotResponse(message) {
+  const lowerMessage = message.toLowerCase();
+  if (lowerMessage.includes('admission') || lowerMessage.includes('apply')) return dsuResponses.admission;
+  if (lowerMessage.includes('cse') || lowerMessage.includes('computer science')) return dsuResponses.cse;
+  if (lowerMessage.includes('ece') || lowerMessage.includes('electronics')) return dsuResponses.ece;
+  if (lowerMessage.includes('mechanical') || lowerMessage.includes('mech')) return dsuResponses.mechanical;
+  if (lowerMessage.includes('civil')) return dsuResponses.civil;
+  if (lowerMessage.includes('mba')) return dsuResponses.mba;
+  if (lowerMessage.includes('bca')) return dsuResponses.bca;
+  if (lowerMessage.includes('fee') || lowerMessage.includes('cost')) return dsuResponses.fees;
+  if (lowerMessage.includes('scholarship')) return dsuResponses.scholarship;
+  if (lowerMessage.includes('hostel') || lowerMessage.includes('accommodation')) return dsuResponses.hostel;
+  if (lowerMessage.includes('placement') || lowerMessage.includes('job')) return dsuResponses.placement;
+  if (lowerMessage.includes('contact') || lowerMessage.includes('phone')) return dsuResponses.contact;
+  if (lowerMessage.includes('address') || lowerMessage.includes('location')) return dsuResponses.address;
+  if (lowerMessage.includes('campus')) return dsuResponses.campus;
+  if (lowerMessage.includes('library')) return dsuResponses.library;
+  if (lowerMessage.includes('lab')) return dsuResponses.labs;
+  if (lowerMessage.includes('sport')) return dsuResponses.sports;
+  if (lowerMessage.includes('event') || lowerMessage.includes('fest')) return dsuResponses.events;
+  if (lowerMessage.includes('accreditation') || lowerMessage.includes('naac')) return dsuResponses.accreditation;
+  if (lowerMessage.includes('faculty') || lowerMessage.includes('teacher')) return dsuResponses.faculty;
+  if (lowerMessage.includes('research')) return dsuResponses.research;
+  if (lowerMessage.includes('course') || lowerMessage.includes('program')) return dsuResponses.courses;
+  return dsuResponses.default;
+}
+
+if (chatSend) {
+  chatSend.addEventListener('click', () => sendMessage(chatInput.value));
+}
+
+if (chatInput) {
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage(chatInput.value);
+  });
+}
+
+document.querySelectorAll('.quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const query = btn.dataset.query;
+    addMessage(btn.textContent, 'user');
+    setTimeout(() => addMessage(dsuResponses[query] || dsuResponses.default, 'bot'), 500);
+  });
 });
