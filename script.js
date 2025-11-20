@@ -316,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     accreditation: 'NAAC A+ grade, AICTE approved, UGC recognized university.',
     faculty: '200+ experienced faculty, many with PhD and industry experience.',
     research: 'Active research in AI, IoT, Robotics, and emerging technologies.',
+    cst:'Computer Science And Technology , 4 years, Fee: ₹2.5L/year, NAAC A+ accredited. ',
     default: "I can help with DSU admissions, courses, contact details, fees, and placements. What would you like to know?"
   };
 
