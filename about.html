@@ -101,7 +101,25 @@
         <li class="dropdown">
           <a href="#">ACADEMICS</a>
           <ul class="dropdown-content">
-            <li><a href="school.html">SCHOOLS</a></li>
+            <li class="dropdown-sub">
+              <a href="#">SCHOOLS</a>
+              <ul class="submenu">
+                <li><a href="school.html">ENGINEERING</a></li>
+                <li>
+                  <a href="commerce.html">COMMERCE AND MANAGEMENT STUDIES</a>
+                </li>
+                <li>
+                  <a href="computer.html">COMPUTER APPLICATIONS</a>
+                </li>
+                <li><a href="law.html">SCHOOL OF LAW</a></li>
+                <li><a href="science.html">APPLIED SCIENCES</a></li>
+                <li><a href="executive.html">EXECUTIVE EDUCATION</a></li>
+                <li><a href="arts.html">ARTS,DESIGN AND HUMANITIES</a></li>
+                <li><a href="design.html">DESIGN & DIGITAL TRANSMEDIA</a></li>
+                <li><a href="healthscience.html">HEALTH SCIENCES</a></li>
+                <li><a href="mbbs.html">MBBS</a></li>
+              </ul>
+            </li>
             <li><a href="underprogram.html">UNDERGRADUATE PROGRAMMES</a></li>
             <li><a href="postprogram.html">POSTGRADUATE PROGRAMMES</a></li>
           </ul>
@@ -249,18 +267,23 @@
           <div class="message bot-message">
             <p>Hello! I'm your DSU Assistant. How can I help you today?</p>
             <div class="quick-options">
-              <button class="quick-btn" data-query="admissions">Admissions</button>
+              <button class="quick-btn" data-query="admissions">
+                Admissions
+              </button>
               <button class="quick-btn" data-query="courses">Courses</button>
               <button class="quick-btn" data-query="contact">Contact</button>
             </div>
           </div>
         </div>
         <div class="chat-input">
-          <input type="text" id="user-input" placeholder="Type your question...">
+          <input
+            type="text"
+            id="user-input"
+            placeholder="Type your question..."
+          />
           <button id="send-btn">Send</button>
         </div>
       </div>
     </div>
-
   </body>
 </html>
