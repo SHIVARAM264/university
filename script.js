@@ -184,6 +184,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Wire RESEARCH top-level link and mark active on Research page
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.toLowerCase();
+  const researchTop = Array.from(document.querySelectorAll('.main-nav > ul > li.dropdown > a'))
+    .find((a) => a.textContent.trim().toLowerCase() === 'research');
+  if (researchTop) {
+    researchTop.setAttribute('href', 'research.html');
+    if (path.endsWith('research.html')) {
+      researchTop.classList.add('active');
+      const li = researchTop.parentElement;
+      if (li) li.classList.add('active');
+    }
+  }
+});
+
 // Wire ACADEMICS links and set active on School/Undergrad/Postgrad pages
 document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname.toLowerCase();
@@ -193,34 +208,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const list = academicsDropdown.querySelector('.dropdown-content');
   if (!list) return;
 
-  const desired = [
-    { label: 'SCHOOL', href: 'school.html' },
-    { label: 'UNDERGRADUATE PROGRAMMES', href: 'underprogram.html' },
-    { label: 'POSTGRADUATE PROGRAMMES', href: 'postprogram.html' },
-    { label: 'EXECUTIVE EDUCATION', href: '#' },
-    { label: 'ONLINE EDUCATION', href: '#' }
-  ];
-
-  const existingLinks = Array.from(list.querySelectorAll('a'));
-  const getOrCreate = (label) => {
-    const found = existingLinks.find((a) => a.textContent.trim().toLowerCase() === label.toLowerCase());
-    if (found) return found;
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.textContent = label;
-    li.appendChild(a);
-    list.appendChild(li);
-    return a;
+  const mapping = {
+    'school': 'school.html',
+    'undergraduate programmes': 'underprogram.html',
+    'postgraduate programmes': 'postprogram.html'
   };
 
-  desired.forEach((item, index) => {
-    const a = getOrCreate(item.label);
-    a.setAttribute('href', item.href);
-    const li = a.parentElement;
-    if (li) list.insertBefore(li, list.children[index] || null);
+  Array.from(list.querySelectorAll('a')).forEach((a) => {
+    const key = a.textContent.trim().toLowerCase();
+    if (mapping[key]) a.setAttribute('href', mapping[key]);
   });
 
-  const activeMap = ['school.html', 'underprogram.html', 'postprogram.html'];
+  const activeMap = Object.values(mapping);
   const current = activeMap.find((href) => path.endsWith(href));
   if (current) {
     const target = Array.from(list.querySelectorAll('a')).find((a) => a.getAttribute('href') === current);
@@ -238,41 +237,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const list = admissionsDropdown.querySelector('.dropdown-content');
   if (!list) return;
 
-  const desired = [
-    { label: 'ADMISSION DETAILS', href: 'admission.html' },
-    { label: 'DIRECT ADMISSIONS-2026', href: 'directadm.html' },
-    { label: 'COURSE,ELIGIBILITY & FEE', href: 'cour_elg_fee.html' },
-    { label: 'HOSTEL FEE', href: 'hostelfee.html' },
-    { label: 'INTERNATIONAL ADMISSIONS', href: '#' },
-    { label: 'ONLINE DEGREE', href: '#' },
-    { label: 'HELPLINE', href: '#' }
-  ];
-
-  const existingLinks = Array.from(list.querySelectorAll('a'));
-  const getOrCreate = (label) => {
-    const found = existingLinks.find((a) => a.textContent.trim().toLowerCase() === label.toLowerCase());
-    if (found) return found;
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.textContent = label;
-    li.appendChild(a);
-    list.appendChild(li);
-    return a;
+  const mapping = {
+    'admission details': 'admission.html',
+    'direct admissions-2026': 'directadm.html',
+    'course,eligibility & fee': 'cour_elg_fee.html',
+    'hostel fee': 'hostelfee.html'
   };
 
-  desired.forEach((item, index) => {
-    const a = getOrCreate(item.label);
-    a.setAttribute('href', item.href);
-    const li = a.parentElement;
-    if (li) list.insertBefore(li, list.children[index] || null);
+  Array.from(list.querySelectorAll('a')).forEach((a) => {
+    const key = a.textContent.trim().toLowerCase();
+    if (mapping[key]) a.setAttribute('href', mapping[key]);
   });
 
-  const activeMap = desired.map((d) => d.href).filter((href) => href !== '#');
+  const activeMap = Object.values(mapping);
   const current = activeMap.find((href) => path.endsWith(href));
   if (current) {
     const target = Array.from(list.querySelectorAll('a')).find((a) => a.getAttribute('href') === current);
     if (target) target.classList.add('active');
     admissionsDropdown.classList.add('active');
+  }
+});
+
+// Wire RESEARCH dropdown links globally and set active states
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname.toLowerCase();
+  const researchDropdown = Array.from(document.querySelectorAll('.main-nav > ul > li.dropdown'))
+    .find((li) => li.querySelector('a') && li.querySelector('a').textContent.trim().toLowerCase() === 'research');
+  if (!researchDropdown) return;
+  const list = researchDropdown.querySelector('.dropdown-content');
+  if (!list) return;
+
+  const mapping = {
+    'ph.d calendar of events': 'phd1.html',
+    'ph.d admission': 'phd2.html',
+    'ph.d regulations': 'regulatiion.html',
+    'research promotion policy': 'promotion.html'
+  };
+
+  Array.from(list.querySelectorAll('a')).forEach((a) => {
+    const key = a.textContent.trim().toLowerCase();
+    if (mapping[key]) a.setAttribute('href', mapping[key]);
+  });
+
+  const activeMap = Object.values(mapping);
+  const current = activeMap.find((href) => path.endsWith(href));
+  if (current) {
+    const target = Array.from(list.querySelectorAll('a')).find((a) => a.getAttribute('href') === current);
+    if (target) target.classList.add('active');
+    researchDropdown.classList.add('active');
   }
 });
 
