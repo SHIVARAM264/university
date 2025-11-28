@@ -480,3 +480,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const nriBadge = document.querySelector(".badge.nri");
+  if (nriBadge) {
+    nriBadge.addEventListener("click", () => {
+      window.location.href = "registrationform.html";
+    });
+  }
+});
