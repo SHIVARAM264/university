@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information Lookup - DSU</title>
+    <link rel="stylesheet" href="../style.css" />
+    <style>
+        /* Theme Variables */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #002f6c;
+            --text-secondary: rgba(0,47,108,0.7);
+            --border-color: #e1e5e9;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --border-color: #555;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { transform: scale(1.05); }
+        .theme-icon { font-size: 16px; }
+
+        body { background: var(--bg-primary); color: var(--text-primary); transition: all 0.3s ease; }
+        .lookup-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .lookup-card { background: var(--bg-secondary); padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .lookup-title { color: var(--text-primary); text-align: center; margin-bottom: 30px; font-size: 28px; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 30px; }
+        .search-input { flex: 1; padding: 12px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 16px; background: var(--bg-primary); color: var(--text-primary); }
+        .search-btn { padding: 12px 20px; background: #0073e6; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .search-btn:hover { background: #005bb5; }
+        .result { margin-top: 20px; padding: 20px; background: var(--bg-tertiary); border-radius: 5px; display: none; }
+        .error { background: #ffe6e6; color: #d32f2f; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        [data-theme="dark"] .error { background: #4a1a1a; color: #ff6b6b; }
+        [data-theme="dark"] .success { background: #1a4a1a; color: #69db7c; }
+        .student-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px; }
+        .info-item { padding: 10px; background: var(--bg-secondary); border-radius: 5px; }
+        .info-label { font-weight: bold; color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <marquee class="announcement" direction="right" scrollamount="3">📅 ACADEMIC CALENDAR FOR 2025-26 — <a href="#">CLICK HERE</a> TO APPLY FOR OCT 2025 EXECUTIVE MBA BATCH</marquee>
+        <div class="top-bar-right">
+            <input type="text" placeholder="Search ...">
+            <button>Search</button>
+        </div>
+    </div>
+
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="theme-icon">🌙</span>
+        <span class="theme-text">Dark</span>
+    </div>
+
+    <div class="header-top">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="../ADDIMAGE/logo.png" alt="Institution logo" class="logo" >
+                <div class="institution-info">
+                    <h1>DAYANANDA SAGAR</h1>
+                    <p>UNIVERSITY</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lookup-container">
+        <div class="lookup-card">
+            <h1 class="lookup-title">Student Information Lookup</h1>
+            <div class="search-box">
+                <input type="text" id="usnInput" class="search-input" placeholder="Enter USN (e.g., ENG250001)" maxlength="10">
+                <button onclick="searchStudent()" class="search-btn">Search</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        /* Theme Toggle */
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const themeIcon = document.querySelector('.theme-icon');
+            const themeText = document.querySelector('.theme-text');
+            if (newTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.querySelector('.theme-icon').textContent = '☀️';
+            document.querySelector('.theme-text').textContent = 'Light';
+        }
+
+        async function searchStudent() {
+            const usn = document.getElementById('usnInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            if (!usn) {
+                showResult('Please enter a USN', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/usn/${usn}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const app = data.application;
+                    const html = `
+                        <h3>Student Information Found</h3>
+                        <div class="student-info">
+                            <div class="info-item"><span class="info-label">USN:</span> ${app.usn}</div>
+                            <div class="info-item"><span class="info-label">Name:</span> ${app.name}</div>
+                            <div class="info-item"><span class="info-label">Email:</span> ${app.email}</div>
+                            <div class="info-item"><span class="info-label">Phone:</span> ${app.phone}</div>
+                            <div class="info-item"><span class="info-label">Course:</span> ${app.course}</div>
+                            <div class="info-item"><span class="info-label">Gender:</span> ${app.gender}</div>
+                            <div class="info-item"><span class="info-label">Date of Birth:</span> ${app.dob}</div>
+                            <div class="info-item"><span class="info-label">Submitted:</span> ${new Date(app.submittedAt).toLocaleDateString()}</div>
+                        </div>
+                        ${app.address ? `<div class="info-item" style="grid-column: 1/-1; margin-top: 10px;"><span class="info-label">Address:</span> ${app.address}</div>` : ''}
+                    `;
+                    showResult(html, 'success');
+                } else {
+                    showResult('Student not found. Please check the USN and try again.', 'error');
+                }
+            } catch (error) {
+                showResult('Error searching for student. Please try again.', 'error');
+            }
+        }
+
+        function showResult(content, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = content;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+        }
+
+        document.getElementById('usnInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchStudent();
+        });
+    </script>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>ADMISSIONS</h4>
+                <ul>
+                    <li><a href="student-lookup.html">Student Lookup</a></li>
+                    <li><a href="RegistartionForm.html">Apply Now</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DSU. All Rights Reserved</p>
+        </div>
+    </footer>
+
+</body>
+</html>

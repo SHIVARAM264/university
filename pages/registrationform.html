@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSU Admission Form</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+
+      :root {
+        --glass: rgba(0, 0, 0, 0.04);
+        /* Provided theme tokens */
+        --page-bg: #f2f4f7;
+        --primary-blue: #002f6c; /* header / accents */
+        --accent-dark: #001f4a;
+        --button-yellow: #f4b000; /* primary button */
+        --button-text: #002f6c;
+        --input-border-idle: #bfc7d1;
+        --input-border-focus: #002f6c;
+        --error: #d32f2f;
+        --success: #2e7d32;
+        --card-width: 760px;
+        --bottom-space: 140px; /* reserve space so fixed popup won't overlap form */
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: var(--page-bg);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-blue);
+      }
+
+      /* container */
+      .container {
+        width: min(92%, var(--card-width));
+        background: #ffffff;
+        border: 1px solid rgba(47, 63, 84, 0.06);
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 8px 28px rgba(16, 30, 60, 0.08);
+        position: relative;
+        overflow: visible;
+        transform-origin: center;
+        animation: pop 0.6s cubic-bezier(0.2, 0.9, 0.2, 1);
+        padding-bottom: calc(
+          var(--bottom-space) / 1.4
+        ); /* extra spacing to avoid popup overlap */
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(18px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* decorative header */
+      .header {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 12px;
+        background: var(--primary-blue); /* header bar */
+        color: #ffffff;
+        padding: 14px 16px;
+        border-radius: 10px;
+      }
+      .logo {
+        width: 62px;
+        height: 62px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transform: none;
+      }
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+      h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        color: #ffffff; /* header text white per spec */
+      }
+      .sub {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        margin-top: 4px;
+      }
+
+      /* form layout */
+      form#admissionForm {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        align-items: start;
+      }
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .field {
+        position: relative;
+        transition: transform 0.25s ease;
+      }
+      .field:hover {
+        transform: translateY(-4px);
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        padding: 14px 14px 14px 46px;
+        border-radius: 8px;
+        border: 1px solid var(--input-border-idle);
+        background: #ffffff;
+        color: var(--primary-blue);
+        outline: none;
+        font-size: 14px;
+      }
+      .field textarea {
+        min-height: 96px;
+        resize: vertical;
+        padding-top: 18px;
+      }
+      .field input:focus,
+      .field textarea:focus,
+      .field select:focus {
+        border-color: var(--input-border-focus);
+        box-shadow: 0 6px 18px rgba(0, 47, 108, 0.08);
+      }
+
+      /* floating label */
+      .field label {
+        position: absolute;
+        left: 46px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(0, 47, 108, 0.6);
+        pointer-events: none;
+        transition: all 0.22s ease;
+        font-size: 13px;
+        background: transparent;
+        padding: 0 6px;
+      }
+      .field input:not(:placeholder-shown) + label,
+      .field textarea:not(:placeholder-shown) + label,
+      .field select:focus + label,
+      .field input:focus + label,
+      .field textarea:focus + label {
+        top: -8px;
+        font-size: 12px;
+        color: var(--primary-blue);
+        left: 12px;
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 6px;
+      }
+
+      /* left icon in fields */
+      .field .icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 22px;
+        opacity: 0.95;
+        display: grid;
+        place-items: center;
+        color: var(--primary-blue);
+        filter: drop-shadow(0 3px 8px rgba(2, 47, 108, 0.06));
+      }
+
+      /* gender, course styling */
+      select {
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: linear-gradient(
+            45deg,
+            transparent 50%,
+            rgba(255, 255, 255, 0.18) 50%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.18) 50%,
+            transparent 50%
+          );
+        background-position: calc(100% - 14px) calc(1em + 2px),
+          calc(100% - 10px) calc(1em + 2px);
+        background-size: 6px 6px, 6px 6px;
+        background-repeat: no-repeat;
+        padding-right: 18px;
+      }
+
+      /* photo upload */
+      .photo-wrap {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        align-content: flex-start;
+        flex-wrap: wrap;
+      }
+      .avatar {
+        width: 84px;
+        height: 84px;
+        border-radius: 12px;
+        background: #f6f8fa;
+        border: 1px solid var(--input-border-idle);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        flex: 0 0 84px; /* keep avatar from shrinking/overlapping */
+        z-index: 2; /* keep avatar visually above adjacent controls */
+      }
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* ensure the right-side content can shrink without overflowing the avatar */
+      .photo-wrap > div {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      /* style file input so it doesn't overflow or overlap other items */
+      .photo-wrap input[type="file"] {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: #ffffff;
+        color: var(--primary-blue);
+        border: 1px solid var(--input-border-idle);
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      /* submit/button */
+      .actions {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 6px;
+        margin-bottom: 8px;
+      }
+      .btn {
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        flex: 1;
+        color: var(--button-text);
+        font-weight: 700;
+        background: linear-gradient(
+          90deg,
+          var(--button-yellow),
+          var(--button-yellow)
+        );
+        box-shadow: 0 8px 20px rgba(0, 47, 108, 0.06);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+      .btn:active {
+        transform: translateY(1px) scale(0.998);
+      }
+      .btn.success {
+        background: linear-gradient(90deg, #54f0b7, #00ffa1);
+        color: #003;
+      }
+      .btn .tick {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%) scale(0.9);
+        opacity: 0;
+        transition: all 0.28s ease;
+      }
+      .btn.success .tick {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+      .btn:hover {
+        background: var(--primary-blue);
+        color: #ffffff;
+      }
+
+      /* popup */
+      .popup {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -120px;
+        background: #ffffff;
+        padding: 12px 18px;
+        border-left: 6px solid var(--success);
+        border-radius: 10px;
+        color: var(--primary-blue);
+        font-weight: 600;
+        transition: all 0.45s cubic-bezier(0.2, 0.9, 0.2, 1);
+        backdrop-filter: blur(8px);
+        z-index: 60;
+      }
+      .popup.show {
+        bottom: 28px;
+        box-shadow: 0 18px 60px rgba(0, 140, 255, 0.12);
+      }
+
+      /* small helper text */
+      .hint {
+        font-size: 12px;
+        color: rgba(2, 47, 108, 0.7);
+        margin-top: 6px;
+      }
+
+      /* responsive */
+      @media (max-width: 820px) {
+        form#admissionForm {
+          grid-template-columns: 1fr;
+        }
+        .avatar {
+          width: 72px;
+          height: 72px;
+        }
+        /* stack photo area on small screens to avoid overlap */
+        .photo-wrap {
+          flex-direction: row;
+          gap: 10px;
+          align-items: flex-start;
+        }
+        .photo-wrap input[type="file"] {
+          margin-top: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo"><img src="../ADDIMAGE/logo.png" alt="DSU" /></div>
+        <div>
+          <h2>Dayananda Sagar University</h2>
+          <div class="sub">Admission Application — Online Form</div>
+        </div>
+      </div>
+
+      <form id="admissionForm" novalidate>
+        <div class="field">
+          <div class="icon">👤</div>
+          <input
+            type="text"
+            id="name"
+            placeholder=" "
+            required
+            autocomplete="name"
+          />
+          <label for="name">Full Name</label>
+        </div>
+
+        <div class="field">
+          <div class="icon">📅</div>
+          <input type="date" id="dob" placeholder=" " required />
+          <label for="dob">Date of Birth</label>
+        </div>
+
+        <div class="field">
+          <div class="icon">⚧</div>
+          <select id="gender" required>
+            <option value="" disabled selected hidden></option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+          <label for="gender">Gender</label>
+        </div>
+
+        <div class="field">
+          <div class="icon">✉</div>
+          <input
+            type="email"
+            id="email"
+            placeholder=" "
+            required
+            autocomplete="email"
+          />
+          <label for="email">Email ID</label>
+        </div>
+
+        <div class="field">
+          <div class="icon">📞</div>
+          <input
+            type="tel"
+            id="phone"
+            placeholder=" "
+            required
+            title="Enter mobile number"
+          />
+          <label for="phone">Mobile Number</label>
+        </div>
+
+        <div class="field">
+          <div class="icon">🎓</div>
+          <select id="course" required>
+            <option value="" disabled selected hidden></option>
+            <option>B.Tech</option>
+            <option>BCA</option>
+            <option>BBA</option>
+            <option>B.Com</option>
+            <option>Pharmacy</option>
+            <option>MBA</option>
+            <option>M.Tech</option>
+          </select>
+          <label for="course">Course Applying For</label>
+        </div>
+
+        <div class="field full">
+          <div class="icon">🏠</div>
+          <textarea id="address" placeholder=" " required></textarea>
+          <label for="address">Address</label>
+        </div>
+
+        <div class="field full photo-wrap">
+          <div class="avatar" id="avatarPreview" title="Photo preview">
+            <!-- default avatar -->
+            <img
+              src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='100%' height='100%' fill='%23001f3f'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins' font-size='74' fill='%2300eaff'>DSU</text></svg>"
+              alt="avatar"
+            />
+          </div>
+          <div style="flex: 1">
+            <label
+              style="
+                font-size: 13px;
+                margin-bottom: 8px;
+                display: block;
+                color: rgba(230, 255, 255, 0.85);
+              "
+              >Upload Photo (optional)</label
+            >
+            <!-- removed inline styles so CSS rules control sizing and stacking -->
+            <input id="photo" type="file" accept="image/*" />
+            <div class="hint">
+              Preferred: 1:1 ratio, under 2MB. A clear headshot improves
+              verification.
+            </div>
+          </div>
+        </div>
+
+        <div class="actions full">
+          <button type="submit" class="btn" id="submitBtn">
+            Submit Application
+            <span class="tick">✔</span>
+          </button>
+        </div>
+
+        <div class="hint full" id="liveHint">
+          Fill the form and submit. We'll reach out within 3 working days.
+        </div>
+      </form>
+    </div>
+
+    <div class="popup" id="popup">
+      ✔ Application Submitted Successfully. We will contact you shortly!
+    </div>
+
+    <script>
+      /* basic interactive enhancements */
+      const form = document.getElementById("admissionForm");
+      const popup = document.getElementById("popup");
+      const submitBtn = document.getElementById("submitBtn");
+      const liveHint = document.getElementById("liveHint");
+      const phone = document.getElementById("phone");
+      const nameInput = document.getElementById("name");
+      const photoInput = document.getElementById("photo");
+      const avatarPreview = document
+        .getElementById("avatarPreview")
+        .querySelector("img");
+
+      /* preview uploaded photo */
+      photoInput.addEventListener("change", (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        if (f.size > 2_200_000) {
+          alert("Photo too large. Please use file under ~2MB.");
+          e.target.value = "";
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => (avatarPreview.src = reader.result);
+        reader.readAsDataURL(f);
+      });
+
+      /* phone formatting simple */
+      phone.addEventListener("input", (e) => {
+        // keep only digits, limit to 10
+        const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+        // format as Indian 5+5 grouping: 99999 99999
+        if (digits.length > 5)
+          e.target.value = digits.slice(0, 5) + " " + digits.slice(5);
+        else e.target.value = digits;
+      });
+
+      // validate on blur (any number of digits, minimum 7)
+      phone.addEventListener("blur", (e) => {
+        const digits = e.target.value.replace(/\D/g, "");
+        if (!digits) {
+          phone.setCustomValidity("");
+          return;
+        }
+        const ok = digits.length >= 7;
+        phone.setCustomValidity(
+          ok ? "" : "Enter a valid mobile number (minimum 7 digits)"
+        );
+        if (!ok) phone.reportValidity();
+      });
+
+      /* small live hint using name */
+      nameInput.addEventListener("input", () => {
+        const v = nameInput.value.trim();
+        liveHint.textContent = v
+          ? `Hello ${
+              v.split(" ")[0]
+            } — please review your details before submitting.`
+          : "Fill the form and submit. We will reach out within 3 working days.";
+      });
+
+      /* submit behavior with micro-interaction + validation */
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // simple HTML validity check
+        if (!form.checkValidity()) {
+          // trigger native validation UI
+          form.reportValidity();
+          return;
+        }
+
+        // animate submit button
+        submitBtn.classList.add("success");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitted";
+        const tick = document.createElement("span");
+        tick.className = "tick";
+        tick.textContent = "✔";
+        submitBtn.appendChild(tick);
+
+        // show popup
+        popup.classList.add("show");
+        setTimeout(() => popup.classList.remove("show"), 4200);
+
+        // fake send: reset after short delay but keep avatar
+        setTimeout(() => {
+          submitBtn.classList.remove("success");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Application";
+          form.reset();
+          liveHint.textContent =
+            "Thank you — form reset. We will contact you shortly.";
+          // reset avatar to default svg
+          avatarPreview.src =
+            "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='100%' height='100%' fill='%23001f3f'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-family='Poppins' font-size='74' fill='%2300eaff'>DSU</text></svg>";
+        }, 1600);
+      });
+    </script>
+        <div class="social-sidebar">
+        <a
+          href="RegistartionForm.html"
+          title="Apply Now"
+          class="apply-now-btn"
+        >
+          APPLY NOW
+        </a>
+        <a
+          href="https://www.linkedin.com/school/dayananda-sagar-university-bangalore/"
+          title="LinkedIn"
+        >
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        <a
+          href="https://www.instagram.com/dayanandasagaruniversityblr?igsh=MXg1NHk4bGJremdnMw=="
+          title="Instagram"
+        >
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+      </div>
+
+</body>
+</html>
