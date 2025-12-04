@@ -17,6 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('.'));
 
+// Specific route for naac
+app.get('/pages/naac', (req, res) => {
+    res.sendFile(path.join(__dirname, '/pages/naac.html'));
+});
+
 // Use routers
 app.use('/api', apiRouter);
 app.use('/usn', usnRouter);
@@ -24,7 +29,7 @@ app.use('/', pagesRouter);
 
 // Start server
 app.listen(PORT, async () => {
-    await connectDB();
+    await connectDB();    
     console.log(`Server running on http://localhost:${PORT}`);
     console.log('Registration form backend is ready!');
 });
